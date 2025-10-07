@@ -4,6 +4,7 @@ import {
   Button,
   FlatList,
   Modal,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -59,6 +60,24 @@ export default function Index() {
     setModalVisible(false);
   };
 
+  const handleInputChange = (field, value) => {
+    setNewTicket((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const RadioButton = ({ label, value, selected, onSelect }) => {
+    return (
+      <Pressable style={styles.radioContainer} onPress={() => onSelect(value)}>
+        <View style={styles.radioOuter}>
+          {selected && <View style={styles.radioInner} />}
+        </View>
+        <Text style={styles.radioLabel}>{label}</Text>
+      </Pressable>
+    );
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.title}>
@@ -93,6 +112,7 @@ export default function Index() {
                   setNewTicket((prev) => ({ ...prev, description: text }))
                 }
               ></TextInput>
+
               <View style={styles.editButtons}>
                 <Button title="Cancel" onPress={() => setModalVisible(false)} />
                 <Button title="Add" onPress={addTicket} />
