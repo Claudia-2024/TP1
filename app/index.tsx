@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const tickets = [
+const initialTickets = [
   {
     id: 1,
     title: "Create project",
@@ -34,6 +34,30 @@ const tickets = [
 
 export default function Index() {
   const [modalVisible, setModalVisible] = useState(false);
+  const [tickets, setTickets] = useState(initialTickets);
+  const [newTicket, setNewTicket] = useState({
+    title: "",
+    description: "",
+    status: "Created",
+  });
+
+  const addTicket = () => {
+    if (newTicket.title.trim() === "") {
+      alert("Please enter a title");
+      return;
+    }
+
+    const ticketToAdd = {
+      id: tickets.length > 0 ? Math.max(...tickets.map((t) => t.id)) + 1 : 1,
+      title: newTicket.title,
+      description: newTicket.description,
+      status: newTicket.status,
+    };
+
+    setTickets((prev) => [...prev, ticketToAdd]);
+    setNewTicket({ title: "", description: "", status: "Created" });
+    setModalVisible(false);
+  };
 
   return (
     <SafeAreaView>
@@ -52,12 +76,26 @@ export default function Index() {
           <SafeAreaView>
             <View style={styles.modalView}>
               <Text style={styles.label}>Title</Text>
-              <TextInput style={styles.input}></TextInput>
+              <TextInput
+                style={styles.input}
+                placeholder="Ticket Title"
+                value={newTicket.title}
+                onChangeText={(text) =>
+                  setNewTicket((prev) => ({ ...prev, title: text }))
+                }
+              ></TextInput>
               <Text style={styles.label}>Description</Text>
-              <TextInput style={styles.input}></TextInput>
+              <TextInput
+                style={styles.input}
+                placeholder="Description"
+                value={newTicket.description}
+                onChangeText={(text) =>
+                  setNewTicket((prev) => ({ ...prev, description: text }))
+                }
+              ></TextInput>
               <View style={styles.editButtons}>
-                <Button title="Cancel" />
-                <Button title="Add" />
+                <Button title="Cancel" onPress={() => setModalVisible(false)} />
+                <Button title="Add" onPress={addTicket} />
               </View>
             </View>
           </SafeAreaView>
